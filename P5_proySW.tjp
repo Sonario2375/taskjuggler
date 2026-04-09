@@ -282,7 +282,7 @@ textreport frame "" {
   #CAMBIO: Genera un informe adicional 
   textreport overviPlanif "Overview de planif inicial" {
     formats html
-    center '<[report id="overview_planif"]>'
+    center '<[report id="overviewPlan"]>'
   }
 
   textreport "Status" {
