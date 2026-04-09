@@ -19,7 +19,9 @@ project pSix "Web Game"  2025-12-15 +5m {
   # the project reports. If not specified, the current day will be
   # used, but this will likely be outside of the project range, so it
   # can't be seen in the reports.
-  now 2026-02-25-13:00
+
+  #CAMBIO: Fecha actual
+  now 2026-04-09-12:00
   # The currency for all money values is the US Dollar.
   currency "EUR"
 
@@ -68,6 +70,10 @@ resource dev2 "Samantha Müller" {
 resource dev3 "Peter Green" {
   email "kkk@unizar.es"
 }
+resource me "Alejandro Hernando" {
+  email "897920@unizar.es"
+  limits {dailymax 4h}
+}
 
 # Now we specify the work packages. The whole project is described as
 # a task that contains subtasks. These subtasks are then broken down
@@ -89,6 +95,46 @@ task WMGame "Web & Mobile Game" {
       effort 2d
       allocate boss
       depends WMGame.deliveries.start
+  }
+
+  # CAMBIO: frontend movil
+  task tmobileF "Mobile Front End" {
+    purge chargeset
+    chargeset mFront
+    responsible dev3
+    depends WMGame.tback.tBEd
+    task tGUIm "Mobile GUI Design" {
+      effort 6d
+      actual:effort 15d
+      allocate dev3
+    }
+    task tFEcm "Mobile Front End Construction" {
+      effort 18d
+      allocate dev2, me
+      depends WMGame.tmobileF.tGUIm
+    }
+    task tFEtm "Mobile Front End Test" {
+      effort 8d
+      allocate dev1
+      depends WMGame.tmobileF.tFEcm
+    }    
+  }
+
+  # CAMBIO: Cloud deployment
+  task tcloud "Cloud Back-End Support" {
+    purge chargeset
+    chargeset back
+    responsible dev2
+    depends WMGame.tback.tBEd
+    task tEval "Cloud Provider Evaluation" {
+      effort 3d
+      allocate dev1, me
+    }
+    task tDeploy "Production Deployment" {
+      effort 4d
+      allocate dev1
+      depends WMGame.tback, WMGame.tcloud.tEval
+    }
   }
 
   task tback "Back End" {
@@ -152,8 +198,16 @@ task WMGame "Web & Mobile Game" {
       allocate boss
       allocate dev2
       actual:effort 20d
+      #CAMBIO: fecha y los que depende
+      actual:minstart 2026-05-15
       depends WMGame.twebF
+      depends WMGame.twebM
       depends WMGame.tback
+      depends WMGame.tcloud
+      journalentry 2026-04-09 "Empezamos" {
+        author me
+        alert green
+      }
       }
 
     
@@ -224,6 +278,12 @@ textreport frame "" {
     center '<[report id="overview"]>'
   }
   
+  #CAMBIO: Genera un informe adicional 
+  textreport overviPlanif "Overview de planif inicial" {
+    formats html
+    center '<[report id="overview_planif"]>'
+  }
+
   textreport "Status" {
     formats html
     center -8<-
@@ -270,6 +330,18 @@ taskreport overview "" {
   caption 'All effort values are in man days.'
 }
 
+#CAMBIO: Genera un informe adicional 
+taskreport overview "overview_planif" {
+  scenarios planif
+  headline "Initial Project Plan"
+  columns bsi { title 'WBS' },
+          name, start, end, effort, cost,
+          revenue, chart { ${TaskTip} }
+  timeformat "%a %Y-%m-%d"
+  loadunit days
+  hideresource @all
+  balance cost rev
+}
 
 # Macro to set the background color of a cell according to the alert
 # level of the task.
