@@ -332,7 +332,7 @@ taskreport overview "" {
 }
 
 #CAMBIO: Genera un informe adicional 
-taskreport overview "overview_planif" {
+taskreport overviewPlan "overview_planif" {
   scenarios plan
   headline "Initial Project Plan"
   columns bsi { title 'WBS' },
