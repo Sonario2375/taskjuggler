@@ -29,7 +29,7 @@ project pSix "Web Game"  2025-12-15 +5m {
   scenario plan "Plan" {
     scenario actual "Actual"
   }
-  
+
 }
 
 # This is not a real copyright for this file. It's just used as an example.
@@ -202,7 +202,7 @@ task WMGame "Web & Mobile Game" {
       #CAMBIO: fecha y los que depende
       actual:minstart 2026-05-15
       depends WMGame.twebF
-      depends WMGame.twebM
+      depends WMGame.tmobileF
       depends WMGame.tback
       depends WMGame.tcloud
       journalentry 2026-04-09 "Empezamos" {
@@ -333,7 +333,7 @@ taskreport overview "" {
 
 #CAMBIO: Genera un informe adicional 
 taskreport overview "overview_planif" {
-  scenarios planif
+  scenarios plan
   headline "Initial Project Plan"
   columns bsi { title 'WBS' },
           name, start, end, effort, cost,
